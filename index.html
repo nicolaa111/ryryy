@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Soft System 💐</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #ffe6f2, #e6f7ff, #fff7d6);
+    overflow: hidden;
+}
+
+/* LOGIN */
+#loginBox {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    background: rgba(255,255,255,0.85);
+    padding: 35px;
+    border-radius: 25px;
+    text-align: center;
+    width: 280px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+h3 {
+    color: #ff8fb1;
+}
+
+input {
+    width: 90%;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 12px;
+    border: 1px solid #ffd1e3;
+    text-align: center;
+    font-size: 15px;
+    transition: 0.2s;
+}
+
+/* POP EFFECT */
+.pop {
+    transform: scale(1.05);
+}
+
+/* HINT */
+#hint {
+    font-size: 12px;
+    color: #ff7fb0;
+    margin-top: 5px;
+    min-height: 16px;
+}
+
+/* BUTTONS */
+button {
+    margin-top: 12px;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    background: linear-gradient(135deg, #ffd6ec, #d6f3ff);
+    transition: 0.3s;
+}
+
+button:hover {
+    transform: scale(1.05);
+}
+
+/* MAIN */
+#mainMenu, #explorePage, #exitPage {
+    display: none;
+    text-align: center;
+    padding-top: 90px;
+}
+
+/* HEARTS */
+.heart {
+    position: absolute;
+    color: #ff9ecb;
+    font-size: 18px;
+    animation: floatUp 3s linear forwards;
+}
+
+@keyframes floatUp {
+    from { transform: translateY(0); opacity: 1; }
+    to { transform: translateY(-500px); opacity: 0; }
+}
+
+/* GLITCH */
+#glitchPage {
+    display: none;
+    height: 100vh;
+    background: black;
+    color: red;
+    text-align: center;
+    padding-top: 120px;
+}
+
+.glitchText {
+    font-size: 22px;
+    animation: flicker 0.2s infinite;
+}
+
+@keyframes flicker {
+    0% { opacity: 1; }
+    50% { opacity: 0.3; }
+    100% { opacity: 1; }
+}
+
+h2, h3 {
+    color: #ff7fb0;
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div id="loginBox">
+    <h3> Enter Password 🌸</h3>
+
+    <input type="text" id="pass" oninput="maskEffect()" autocomplete="off">
+    <div id="hint"></div>
+
+    <button onclick="login()">Enter</button>
+</div>
+
+<!-- GLITCH -->
+<div id="glitchPage">
+    <div class="glitchText" id="glitchText"></div>
+</div>
+
+<!-- MAIN -->
+<div id="mainMenu">
+    <h2>hiii 💗</h2>
+    <button onclick="openExplore()">Explore</button>
+</div>
+
+<!-- EXPLORE -->
+<div id="explorePage">
+    <h3>these songs… somehow remind me of you</h3>
+
+    <iframe style="border-radius:14px"
+        src="https://open.spotify.com/embed/playlist/7hZ9UBozuSzs2ffiPUEO4c"
+        width="300" height="380"></iframe>
+
+    <br>
+    <button onclick="exitFlow()">Exit</button>
+</div>
+
+<!-- EXIT -->
+<div id="exitPage">
+    <h2 id="exitMsg"></h2>
+
+    <div>
+        <button onclick="yesAction()">yes</button>
+        <button onclick="nahAction()">nah</button>
+    </div>
+</div>
+
+<script>
+
+let realPass = [];
+let actual = "";
+
+/* 🌸 INPUT MASK SYSTEM */
+function maskEffect() {
+    let input = document.getElementById("pass");
+    let hint = document.getElementById("hint");
+
+    let val = input.value;
+
+    if (val.length > actual.length) {
+        let char = val[val.length - 1];
+        actual += char;
+
+        hint.innerText = "system is watching your input...";
+
+        input.classList.add("pop");
+        setTimeout(() => input.classList.remove("pop"), 150);
+
+        setTimeout(() => {
+            input.value = "•".repeat(actual.length);
+        }, 400);
+
+    } else {
+        actual = val;
+        input.value = "•".repeat(val.length);
+    }
+
+    clearTimeout(window.typingTimer);
+    window.typingTimer = setTimeout(() => {
+        hint.innerText = "";
+    }, 2000);
+
+    if (actual.length === 3) {
+        hint.innerText = "hm... interesting";
+    }
+
+    if (actual.length === 6) {
+        hint.innerText = "i remember this...";
+    }
+}
+
+/* LOGIN */
+function login() {
+    if (actual === "oldman") {
+        document.getElementById("loginBox").style.display = "none";
+        document.getElementById("mainMenu").style.display = "block";
+        spawnHearts();
+    } else {
+        triggerGlitch();
+    }
+}
+
+/* GLITCH */
+function triggerGlitch() {
+    document.getElementById("loginBox").style.display = "none";
+    document.getElementById("glitchPage").style.display = "block";
+
+    let lines = [
+        "ACCESS DENIED",
+        "SYSTEM BREACH DETECTED…",
+        "THAT'S NOT THE PASSWORD I GAVE",
+        "WHO ARE YOU LOGGING IN FOR?"
+    ];
+
+    let i = 0;
+    let text = document.getElementById("glitchText");
+
+    let interval = setInterval(() => {
+        text.innerText = lines[i];
+        i++;
+        if (i >= lines.length) clearInterval(interval);
+    }, 1300);
+
+    setTimeout(() => {
+        document.getElementById("glitchPage").style.display = "none";
+        document.getElementById("loginBox").style.display = "block";
+        document.getElementById("pass").value = "";
+        actual = "";
+    }, 5500);
+}
+
+/* HEARTS */
+function spawnHearts() {
+    for (let i = 0; i < 15; i++) {
+        let h = document.createElement("div");
+        h.className = "heart";
+        h.innerHTML = "🌸";
+        h.style.left = Math.random() * window.innerWidth + "px";
+        h.style.top = "80%";
+        document.body.appendChild(h);
+
+        setTimeout(() => h.remove(), 3000);
+    }
+}
+
+/* MENU */
+function openExplore() {
+    document.getElementById("mainMenu").style.display = "none";
+    document.getElementById("explorePage").style.display = "block";
+}
+
+/* EXIT */
+function exitFlow() {
+    document.getElementById("explorePage").style.display = "none";
+    document.getElementById("exitPage").style.display = "block";
+
+    let msg = document.getElementById("exitMsg");
+    msg.innerText = "thinking…";
+
+    setTimeout(() => msg.innerText = "oh you're leaving?", 2000);
+    setTimeout(() => msg.innerText = "so you got another girl?", 4000);
+}
+
+/* YES */
+function yesAction() {
+    document.getElementById("exitMsg").innerText = "hmmp! ";
+}
+
+/* NAH */
+function nahAction() {
+    document.getElementById("exitMsg").innerText = "lie but whatever";
+
+    setTimeout(() => {
+        alert("k bye just remember im cute and you're just aging");
+        document.getElementById("exitPage").style.display = "none";
+        document.getElementById("loginBox").style.display = "block";
+        actual = "";
+        document.getElementById("pass").value = "";
+        document.getElementById("hint").innerText = "";
+    }, 1200);
+}
+
+</script>
+
+</body>
+</html>
